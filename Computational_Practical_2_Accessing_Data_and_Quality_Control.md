@@ -36,7 +36,7 @@ There are several bioinformatic tools available for evaluating read data quality
 ## Downloading raw data<a name="intro"></a>
 Let's assess the sequence data quality of an isolate of *Klebsiella pneumoniae* (ERR4095909). We will download this sequence data from the European Nucleotide Archive, a data archive which contains public sequencing data from thousands of bacterial sequencing projects. ERR4095909 is the accession number which allows you to find this data in the public archives.
 
-### Step1: Open the terminal and change your working directory to the directory with the files for this practical, which is a folder called cp2.
+### Step 1: Open the terminal and change your working directory to the directory with the files for this practical, which is a folder called cp2.
 
 ```
 cd /home/data/cp2
@@ -61,50 +61,50 @@ Upon successful completion `fastqc` will create an analysis report in html forma
 
 Let's take a look at the graphs generated for ERR4095909_1.fastq, the first read in our read pairs.
 
-## Basic statistics <a name="basics"></a>
+#### Basic statistics <a name="basics"></a>
 
 ![](images/basicstats.png) 
 
 This is a table containing basic information gleaned from the sequence reads such as total number of reads, length (range) of sequence reads and GC%. From this table alone, we can infer average coverage (total number of reads and length of reads) and compare the GC content with the species that we expect the isolate to belong to. 
 In our example, we have an *Escherichia coli* isolate that has a GC percent of around 50%. This matches with the reported GC% of our reads.
 
-## Per base sequence quality <a name="perbase"></a>
+#### Per base sequence quality <a name="perbase"></a>
 
 ![](images/perbasequality.png) 
 
 The y-axis on the graph shows the quality scores and the x-axis represents the base positions in the reads. The blue line shows the mean quality of bases for each position in the reads. The space coloured in the green regions shows high quality, the amber coloured region below reflects acceptable quality and the regions in the red shows low quality. Therefore, if you observe the blue line in the red region for your sequence reads, it means the quality of your sequence reads is low and may contain more errors. These reads need trimming before any downstream analysis to remove low-quality bases.
 
-## Per sequence quality <a name="persequence"></a>
+#### Per sequence quality <a name="persequence"></a>
 
 ![](images/persequencequality.png) 
 
 The per sequence quality score report shows how many reads have overall low quality values. The x-axis shows the mean quality score for each sequence, where a higher number indicates higher quality, and the y-axis shows a count of how many sequences there are with that mean quality score. If a significant proportion of the sequences in a run have overall low quality then this could indicate some kind of systematic problem - possible with just part of the run (for example one end of a flowcell). If you suspect an error on part of the flowcell, you can identify this by looking at the diagnostic reports on the Illumina machine itself, or by looking at the per-tile sequence quality.
 
-## Per base sequence content <a name="persequencecontent"></a>
+#### Per base sequence content <a name="persequencecontent"></a>
 
 ![](images/persequencecontent.png) 
 
 The graph above shows the overall GC content at each of the read positions with X-axis being the base position in the reads and Y-axis showing the percentage of A,T,G and C. For a good library the lines should run parallel reflecting no difference in base calling for each of the 4 bases. The relative amount of each base should reflect the overall composition of the genome. In our case the GC% is around 50 and so each individual base is around 25% of the sequences.
 
-## Per sequence GC content <a name="persequencegc"></a>
+#### Per sequence GC content <a name="persequencegc"></a>
 
 ![](images/persequencegc.png) 
 
 The figure shows the theoretical distribution of GC content per sequence based on the GC percent of the genome, and the actual distribution in your sample. In a normal random library you have a roughly normal distribution of GC content (a single peak) where the peak corresponds to the overall GC content of the underlying genome. An unusually shaped distribution could indicate a contaminated library or some other kind of bias in library prep. 
 
-## Per base N content <a name="perbasen"></a>
+#### Per base N content <a name="perbasen"></a>
 
 ![](images/perbasencontent.png) 
 
 If a sequencer is unable to make a base call with sufficient confidence then it will normally substitute an N rather than a conventional base call. This module plots out the percentage of base calls at each position for which an N was called. It's not unusual to have a very low proportion of Ns especially nearer the end of reads. However, if proportion is higher that could cause problems in downstream analysis.
 
-## Sequence duplication <a name="duplication"></a>
+#### Sequence duplication <a name="duplication"></a>
 
 ![](images/sequenceduplication.png) 
 
 This figure shows the proportion of sequences in your library which are unique, or which occur more than once in your library. In a diverse library where the input DNA was randomly fragmented most sequences will occur only once in the final set. A low level of duplication may indicate a very high level of coverage of the target sequence, but a high level of duplication is more likely to indicate some kind of enrichment bias (e.g., PCR overamplification). This module counts the degree of duplication for every sequence in a library and creates a plot showing the relative number of sequences with different degrees of duplications.
 
-## Adapter content <a name="adapters"></a>
+#### Adapter content <a name="adapters"></a>
 
 ![](images/adapters.png) 
 
@@ -113,7 +113,7 @@ It is important to ensure that the sequence reads are not contaminated with adap
 From all the above data metrics it appears that the sequence reads of the isolate ERR5386320 are of good quality and can be used to run the downstream analysis.
 
 
-## QC Exercise and Quiz <a name="qcexercise"></a>
+#### QC Exercise and Quiz <a name="qcexercise"></a>
 
 Now run the fastqc tool on the sequence reads of another isolate cpe079. The ENA accession number is ERR5386380. This is an isolate of Pseudomonas aeruginosa. The files are located within the folder cp2. Analyse the graphs generated by the tool and answer the following questions:
 1. What is the GC content of the isolate?
@@ -122,13 +122,15 @@ Now run the fastqc tool on the sequence reads of another isolate cpe079. The ENA
 
 If you would like to see examples of FastQC plots generated when sequencing goes wrong, you can look on the [QCFail site](https://sequencing.qcfail.com/software/fastqc/).
 
-## Filtering and trimming of sequence reads<a name="filttrim"></a>
+## Step 4: Filtering and trimming of sequence reads<a name="filttrim"></a>
 Once we have assessed the quality of the sequence reads, sometimes we spot bases with lower quality, particularly in read 2 files. These low quality bases need to be trimmed and here we are going to use another tool fastp for this purpose. fastp is a very fast QC and trimming command, which can be configured in many ways. Run the command `fastp` to see all the different options you can use or look at the website.
 
 ## Trimming Exercise and Quiz <a name="trimexercise"></a>
 Here, we will run fastp on the isolate ERR4095909 that we used in the quiz above. Run the following command (in a single line) to initiate the tool:
 
-`fastp --in1 ERR4095909_1.fastq.gz --in2 ERR4095909_2.fastq.gz --out1 ERR4095909_1.trimmed.fastq.gz --out2 ERR40959092.trimmed.fastq.gz --length_required 40 --cut_front --cut_tail --cut_mean_quality 25`
+```
+fastp --in1 ERR4095909_1.fastq.gz --in2 ERR4095909_2.fastq.gz --out1 ERR4095909_1.trimmed.fastq.gz --out2 ERR40959092.trimmed.fastq.gz --length_required 40 --cut_front --cut_tail --cut_mean_quality 25
+```
 
 In the command above we have used a number of options which are explained below:
 `--in1` and `--in2` are the two input files with the raw data from read 1 and read 2.
